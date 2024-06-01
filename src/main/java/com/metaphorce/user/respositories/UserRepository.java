@@ -1,6 +1,6 @@
 package com.metaphorce.user.respositories;
 
-import com.metaphorce.user.entities.User;
+import com.metaphorce.user.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  * Repository for performing CRUD operations on User entities.
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, String>{
+public interface UserRepository extends JpaRepository<UserEntity, String>{
 
     /**
      * Checks if a user exists with the specified email.
@@ -24,5 +24,8 @@ public interface UserRepository extends JpaRepository<User, String>{
      * @param email the email of the user to be deleted
      */
     void deleteByEmail(String email);
+
+    UserEntity findByEmail(String email);
+
 
 }

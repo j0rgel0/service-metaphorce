@@ -5,6 +5,7 @@ import com.metaphorce.bulk.services.UserBulkService;
 import com.metaphorce.common.dtos.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class UserBulkController {
      * @return a ResponseEntity containing the BulkUserResponse
      */
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<BulkUserResponse> createUsersByBulk(@RequestBody List<UserDTO> userDTOs) {
         BulkUserResponse response = bulkUserService.createUsersByBulk(userDTOs);
         return ResponseEntity.ok(response);
