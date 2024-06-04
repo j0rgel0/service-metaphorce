@@ -91,6 +91,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtTokenVerifier, UsernamePasswordAuthenticationFilter.class)
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtSecret))
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/**").hasAnyRole("ADMINISTRATOR", "USER")
                         .anyRequest().authenticated()
                 );

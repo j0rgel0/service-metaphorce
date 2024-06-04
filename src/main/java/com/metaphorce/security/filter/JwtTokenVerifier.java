@@ -56,6 +56,10 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             String username = decodedJWT.getSubject();
             String role = decodedJWT.getClaim("role").asString();
 
+            if (role == null || role.trim().isEmpty()) {
+                throw new JWTVerificationException("Role claim is missing or empty");
+            }
+
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
             SecurityContextHolder.getContext().setAuthentication(authentication);

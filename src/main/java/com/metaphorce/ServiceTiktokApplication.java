@@ -1,9 +1,11 @@
 package com.metaphorce;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@Slf4j
 @SpringBootApplication
 public class ServiceTiktokApplication {
 
@@ -20,5 +22,6 @@ public class ServiceTiktokApplication {
 
 		// Run the Spring Boot application
 		SpringApplication.run(ServiceTiktokApplication.class, args);
+
 	}
 }

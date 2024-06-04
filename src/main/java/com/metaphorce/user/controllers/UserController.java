@@ -2,6 +2,7 @@ package com.metaphorce.user.controllers;
 
 import com.metaphorce.common.dtos.UserDTO;
 import com.metaphorce.user.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/v1/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -51,6 +53,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {
+        log.info("Read All users!");
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 

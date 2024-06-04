@@ -4,6 +4,7 @@ import com.metaphorce.auth.models.dto.JwtResponseDTO;
 import com.metaphorce.auth.models.dto.LoginRequestDTO;
 import com.metaphorce.auth.service.LoginService;
 import com.metaphorce.auth.util.ApiConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for handling authentication requests.
  */
 @RestController
-@RequestMapping(ApiConstants.AUTH_BASE_URL)
+@RequestMapping(ApiConstants.Auth.BASE_URL)
+@Slf4j
 public class LoginController {
 
     private final LoginService loginService;
@@ -36,7 +38,7 @@ public class LoginController {
      * @param loginRequestDTO The login request data transfer object containing username and password.
      * @return A ResponseEntity containing the JWT response data transfer object.
      */
-    @PostMapping("/login")
+    @PostMapping(ApiConstants.Auth.LOGIN_URL)
     public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         JwtResponseDTO jwtResponseDTO = loginService.login(loginRequestDTO);
         return ResponseEntity.ok(jwtResponseDTO);

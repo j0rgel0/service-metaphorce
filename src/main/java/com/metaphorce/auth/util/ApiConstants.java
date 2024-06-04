@@ -1,36 +1,25 @@
 package com.metaphorce.auth.util;
 
 /**
- * Constants for API endpoints and versions.
+ * Interface for API endpoint paths and versions. This interface is used to maintain
+ * consistent endpoint paths throughout the application, facilitating updates and maintenance.
+ * All fields in an interface are implicitly public, static, and final.
  */
-public final class ApiConstants {
+public interface ApiConstants {
 
     /**
-     * Private constructor to prevent instantiation.
+     * Interface for authentication-related constants.
      */
-    private ApiConstants() {
-        // Private constructor to prevent instantiation
+    interface Auth {
+        /**
+         * The base URL for authentication endpoints.
+         */
+        String BASE_URL = "/auth/v1";
+
+        /**
+         * The URL for the login endpoint. This is the full path used for user authentication.
+         */
+        String LOGIN_URL = "/login";
     }
 
-    /**
-     * The base URL for all API endpoints.
-     */
-    public static final String API_BASE_URL = "/api";
-
-    /**
-     * The current version of the API.
-     */
-    public static final String API_VERSION = "v1";
-
-    // Routes for Login
-
-    /**
-     * The base URL for authentication endpoints.
-     */
-    public static final String AUTH_BASE_URL = API_BASE_URL + "/" + API_VERSION + "/auth";
-
-    /**
-     * The URL for the login endpoint.
-     */
-    public static final String AUTH_LOGIN_URL = AUTH_BASE_URL + "/login";
 }

@@ -37,7 +37,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret) {
         this.authenticationManager = authenticationManager;
         this.jwtSecret = jwtSecret;
-        setFilterProcessesUrl(ApiConstants.AUTH_LOGIN_URL);
+        setFilterProcessesUrl(ApiConstants.Auth.LOGIN_URL);
     }
 
     /**

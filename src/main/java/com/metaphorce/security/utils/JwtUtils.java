@@ -7,6 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -29,10 +33,19 @@ public class JwtUtils {
      */
     public String generateToken(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();
+        String role = principal.getAuthorities().iterator().next().getAuthority();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = now.plus(Duration.ofMillis(jwtExpirationMs));
+
+        Instant issuedAt = now.atZone(ZoneId.systemDefault()).toInstant();
+        Instant expiresAt = expirationTime.atZone(ZoneId.systemDefault()).toInstant();
+
         return JWT.create()
                 .withSubject(principal.getUsername())
-                .withIssuedAt(new Date())
-                .withExpiresAt(new Date((new Date()).getTime() + jwtExpirationMs))
+                .withClaim("role", role)
+                .withIssuedAt(Date.from(issuedAt))
+                .withExpiresAt(Date.from(expiresAt))
                 .sign(Algorithm.HMAC512(jwtSecret));
     }
 }
