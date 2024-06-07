@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * Data Transfer Object for user information.
  */
@@ -28,4 +30,29 @@ public class UserDTO {
      * The email address of the user.
      */
     private String email;
+
+    /**
+     * The password of the user.
+     */
+    private String password;
+
+    /**
+     * The date and time when the user was created.
+     */
+    private LocalDateTime creationDate;
+
+    /**
+     * The date and time when the user was last updated.
+     */
+    private LocalDateTime lastUpdate;
+
+    /**
+     * Indicates whether the user is soft deleted.
+     */
+    private boolean softDelete;
+
+    /**
+     * The role of the user.
+     */
+    private String role;
 }

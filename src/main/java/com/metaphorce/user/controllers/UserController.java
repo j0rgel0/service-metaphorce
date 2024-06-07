@@ -2,11 +2,13 @@ package com.metaphorce.user.controllers;
 
 import com.metaphorce.common.dtos.UserDTO;
 import com.metaphorce.user.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/v1/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -35,6 +38,7 @@ public class UserController {
      * @return a ResponseEntity containing the created UserDTO and HTTP status CREATED
      */
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.createUser(userDTO);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
@@ -47,7 +51,9 @@ public class UserController {
      * @return a ResponseEntity containing a page of UserDTO objects
      */
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {
+        log.info("Read All users!");
         return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
@@ -58,6 +64,7 @@ public class UserController {
      * @return a ResponseEntity containing the UserDTO object
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') or hasRole('ROLE_USER')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
@@ -70,6 +77,7 @@ public class UserController {
      * @return a ResponseEntity containing the updated UserDTO
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
@@ -81,6 +89,7 @@ public class UserController {
      * @return a ResponseEntity with no content
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
@@ -93,6 +102,7 @@ public class UserController {
      * @return a ResponseEntity containing a page of user names
      */
     @GetMapping("/names")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') or hasRole('ROLE_USER')")
     public ResponseEntity<Page<String>> getUsersName(Pageable pageable) {
         return ResponseEntity.ok(userService.getUsersName(pageable));
     }

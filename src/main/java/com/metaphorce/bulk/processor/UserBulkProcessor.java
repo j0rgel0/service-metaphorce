@@ -2,7 +2,7 @@ package com.metaphorce.bulk.processor;
 
 import com.metaphorce.common.dtos.UserDTO;
 import com.metaphorce.common.exceptions.UserAlreadyExistsException;
-import com.metaphorce.user.entities.User;
+import com.metaphorce.user.entities.UserEntity;
 import com.metaphorce.user.mappers.UserMapper;
 import com.metaphorce.user.respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class UserBulkProcessor {
             throw new UserAlreadyExistsException("User already exists with email: " + userDTO.getEmail());
         }
 
-        User user = userMapper.toEntity(userDTO);
-        userRepository.save(user);
+        UserEntity userEntity = userMapper.toEntity(userDTO);
+        userRepository.save(userEntity);
     }
 }

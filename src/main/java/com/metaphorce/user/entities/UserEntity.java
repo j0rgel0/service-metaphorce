@@ -1,14 +1,13 @@
 package com.metaphorce.user.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.time.LocalDateTime;
 
 /**
  * Entity class representing a user.
@@ -19,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class UserEntity {
 
     /**
      * The unique identifier of the user, generated as a UUID.
@@ -38,4 +37,30 @@ public class User {
      * The email address of the user.
      */
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column
+    private LocalDateTime lastUpdate;
+
+    @Column(nullable = false)
+    private boolean softDelete;
+
+    @Column(nullable = false)
+    private String role;
+
+    @PrePersist
+    protected void onCreate() {
+        creationDate = LocalDateTime.now();
+        lastUpdate = creationDate;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdate = LocalDateTime.now();
+    }
 }

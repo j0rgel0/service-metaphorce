@@ -3,13 +3,14 @@ package com.metaphorce.user.services.impl;
 import com.metaphorce.common.dtos.UserDTO;
 import com.metaphorce.common.exceptions.UserAlreadyExistsException;
 import com.metaphorce.common.exceptions.UserNotFoundException;
-import com.metaphorce.user.entities.User;
+import com.metaphorce.user.entities.UserEntity;
 import com.metaphorce.user.mappers.UserMapper;
 import com.metaphorce.user.respositories.UserRepository;
 import com.metaphorce.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Constructs a new UserServiceImpl with the specified UserRepository and UserMapper.
@@ -28,9 +30,10 @@ public class UserServiceImpl implements UserService {
      * @param userMapper the mapper for converting between UserDTO and User entities
      */
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -46,8 +49,9 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("User already exists with email: " + userDTO.getEmail());
         }
 
-        User user = userMapper.toEntity(userDTO);
-        return userMapper.toDTO(userRepository.save(user));
+        UserEntity userEntity = userMapper.toEntity(userDTO);
+        userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return userMapper.toDTO(userRepository.save(userEntity));
     }
 
     /**
@@ -83,10 +87,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO updateUser(String id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        return userMapper.toDTO(userRepository.save(user));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        userEntity.setName(userDTO.getName());
+        userEntity.setEmail(userDTO.getEmail());
+        return userMapper.toDTO(userRepository.save(userEntity));
     }
 
     /**
@@ -97,8 +101,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(String id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        userRepository.delete(user);
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        userRepository.delete(userEntity);
     }
 
     /**
@@ -109,6 +113,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Page<String> getUsersName(Pageable pageable) {
-        return userRepository.findAll(pageable).map(User::getName);
+        return userRepository.findAll(pageable).map(UserEntity::getName);
     }
 }
